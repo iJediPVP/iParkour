@@ -1,0 +1,24 @@
+name: iParkour
+main: me.i_Jedi.IParkour.Main
+version: 1.0
+commands:
+   IPARKOUR:
+      description: Display iParkour commands.
+      usage: /iparkour
+
+permissions:
+   iParkour.*:
+      description: Give access to all of the iParkour commands.
+      children:
+         iParkour.iparkour: true
+         iParkour.edit: true
+         iParkour.checkpoint: true
+   iParkour.iparkour:
+      description: Give access to /iparkour command.
+      default: false
+   iParkour.iparkour.edit:
+      description: Allow player to set points and use /iparkour edit command.
+      default: false
+   iParkour.iparkour.checkpoint:
+      description: Give access to /iparkour checkpoint command.
+      default: false
