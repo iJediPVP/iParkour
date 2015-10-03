@@ -1,7 +1,6 @@
 /*TODO LIST
-
-Edit buttons on edit inv ??
-Make sure there are start and end points before allowing a player to start
+Change how checkpoints are set up. Manually set their number so that they are always in order.
+Edit buttons on edit inv ?? - menu api stuff to do later
 
 * */
 
@@ -56,4 +55,5 @@ public class Main extends JavaPlugin {
         //Logger
         getLogger().info("iParkour has been enabled!");
     }
+
 }

@@ -75,17 +75,26 @@ public class PInteractEvent implements Listener {
                     if(pointInfo.getExists()){
                         //Check if the player has a cooldown
                         if(!pInfo.getHasStartCD()){
-                            pInfo.setStartTime(System.currentTimeMillis());
-                            pInfo.setLastCP("null");
-                            pInfo.setHasStartCD(true);
-                            pInfo.setHasFinishCD(false);
-                            //Check if started
-                            if(pInfo.getHasStarted()){
-                                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "[iParkour]" + ChatColor.GOLD + " Your time has been reset! Good luck!");
+                            //Check for finish point
+                            Point point = new Point(plugin, world, "Finish");
+                            if(point.getExists()){
+                                pInfo.setStartTime(System.currentTimeMillis());
+                                pInfo.setLastCP("null");
+                                pInfo.setHasStartCD(true);
+                                pInfo.setHasFinishCD(false);
+                                //Check if started
+                                if(pInfo.getHasStarted()){
+                                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour]" + ChatColor.GOLD + " Your time has been reset! Good luck!");
+                                }else{
+                                    pInfo.setHasStarted(true);
+                                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour]" + ChatColor.GOLD + " The timer has started! Good luck!");
+                                }
+                                //Finish doesn't exist
                             }else{
-                                pInfo.setHasStarted(true);
-                                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "[iParkour]" + ChatColor.GOLD + " The timer has started! Good luck!");
+                                player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour]" + ChatColor.RED + " There has to be a Finish point before you can start!");
+                                pInfo.setHasStartCD(true);
                             }
+
 
                         }
                     }//Else do nothing
@@ -96,23 +105,34 @@ public class PInteractEvent implements Listener {
                     if(pointInfo.getLocation().equals(loc)){
                         //Check if exists
                         if(pointInfo.getExists()){
-                            //Check if the player has started
-                            if(pInfo.getHasStarted()){
-                                //Check for finish cooldown
-                                if(!pInfo.getHasFinishCD()){
-                                    Long endTime = System.currentTimeMillis();
-                                    pInfo.checkForRecord(endTime);
-                                    pInfo.setHasStarted(false);
-                                    pInfo.setHasStartCD(false);
-                                    pInfo.setHasFinishCD(true);
-                                    pInfo.setLastCP("null");
+                            //Check for Start
+                            Point point = new Point(plugin, world, "Start");
+                            if(point.getExists()){
+                                //Check if the player has started
+                                if(pInfo.getHasStarted()){
+                                    //Check for finish cooldown
+                                    if(!pInfo.getHasFinishCD()){
+                                        Long endTime = System.currentTimeMillis();
+                                        pInfo.checkForRecord(endTime);
+                                        pInfo.setHasStarted(false);
+                                        pInfo.setHasStartCD(false);
+                                        pInfo.setHasFinishCD(true);
+                                        pInfo.setLastCP("null");
+
+                                    }
+                                }else{
+                                    if(!pInfo.getHasFinishCD()){
+                                        pInfo.setHasFinishCD(true);
+                                        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.GOLD + "You have to start at the beginning!");
+                                    }
                                 }
+
+                                //Start doesn't exist
                             }else{
-                                if(!pInfo.getHasFinishCD()){
-                                    pInfo.setHasFinishCD(true);
-                                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.GOLD + "You have to start at the beginning!");
-                                }
+                                player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour]" + ChatColor.RED + " There has to be a Start point before you can finish!");
+                                pInfo.setHasStartCD(true);
                             }
+
 
                         }//Else do nothing
                     }
@@ -133,7 +153,7 @@ public class PInteractEvent implements Listener {
                                 String lastCP = pInfo.getLastCP();
                                 if(lastCP.equals("null") || !lastCP.equals(key)){
                                     pInfo.setLastCP(key);
-                                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.GOLD + "You have reached a Checkpoint! Use the command " +
+                                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.GOLD + "You have reached a Checkpoint! Use the command " +
                                             ChatColor.GREEN + "" + ChatColor.BOLD + "/iparkour checkpoint" + ChatColor.GOLD + " to return here!");
                                     return;
                                 }

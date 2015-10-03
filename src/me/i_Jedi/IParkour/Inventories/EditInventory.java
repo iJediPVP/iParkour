@@ -65,6 +65,7 @@ public class EditInventory {
                 sortedItems.add(item);
             }
         }
+
         try{
             if(!startItem.equals(null)){
                 sortedItems.add(0, startItem);
