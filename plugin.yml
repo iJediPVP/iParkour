@@ -1,6 +1,7 @@
 name: iParkour
 main: me.i_Jedi.IParkour.Main
 version: 1.0
+depend: [MenuAPI]
 commands:
    IPARKOUR:
       description: Display iParkour commands.

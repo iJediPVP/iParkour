@@ -45,13 +45,14 @@ public class Main extends JavaPlugin {
 
         //Logger
         getLogger().info("iParkour has been enabled!");
+
     }
 
     //Disabled
     @Override
     public void onDisable(){
         //Logger
-        getLogger().info("iParkour has been enabled!");
+        getLogger().info("iParkour has been disable!");
     }
 
 }
