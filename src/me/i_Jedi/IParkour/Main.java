@@ -1,7 +1,7 @@
 /*TODO LIST
 
 Edit buttons on edit inv ??
-When a stop/start point is removed, reset player scores for that world.
+Make sure there are start and end points before allowing a player to start
 
 * */
 

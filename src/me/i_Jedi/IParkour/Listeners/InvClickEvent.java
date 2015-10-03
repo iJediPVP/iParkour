@@ -8,12 +8,16 @@ import me.i_Jedi.MenuAPI.MenuManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class InvClickEvent implements Listener {
@@ -75,10 +79,25 @@ public class InvClickEvent implements Listener {
                 Point pointInfo = new Point(plugin, Bukkit.getWorld(worldName), pointName);
                 //See which option was clicked
                 if(itemName.equals("YES")){
+
                     //Remove the point
                     pointInfo.removePoint();
                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "" + pointName + ChatColor.GOLD + " has been removed.");
 
+                    //If start or finish point, reset player records
+                    if(pointName.equals("Start") || pointName.equals("Finish")){
+                        //Reset player record times.
+                        File dir = new File(plugin.getDataFolder() + "/playerData");
+                        File[] dirList = dir.listFiles();
+                        for(File file : dirList){
+                            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+                            config.set(worldName + ".recordTime", null);
+                            try{
+                                config.save(file);
+                            }catch(IOException ioe){}
+                        }
+                        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "Player records have been reset.");
+                    }
 
                 }//Else do nothing special for NO and Back. They both have the same function.
                 //If there are not any more points in this world, go back to the main menu.

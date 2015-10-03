@@ -21,13 +21,22 @@ public class ConfirmInventory {
         ItemStack iStack = new ItemStack(Material.WOOL, 1, (short) 13);
         ItemMeta iMeta = iStack.getItemMeta();
         iMeta.setDisplayName(ChatColor.GREEN + "YES");
-        iMeta.setLore(Arrays.asList(ChatColor.RED + "Are you sure you want to delete this point?", ChatColor.RED + "WARNING! This action can NOT be undone!", ChatColor.GOLD + "PointName:", pointName, ChatColor.GOLD + "World:", worldName));
+        if(pointName.equals("Start") || pointName.equals("Finish")){
+            iMeta.setLore(Arrays.asList(ChatColor.RED + "Are you sure you want to delete this point?", ChatColor.RED + "WARNING! This action can NOT be undone!", ChatColor.GOLD + "PointName:", pointName, ChatColor.GOLD + "World:", worldName, ChatColor.RED + "This will reset player records!"));
+        }else{
+            iMeta.setLore(Arrays.asList(ChatColor.RED + "Are you sure you want to delete this point?", ChatColor.RED + "WARNING! This action can NOT be undone!", ChatColor.GOLD + "PointName:", pointName, ChatColor.GOLD + "World:", worldName));
+        }
         iStack.setItemMeta(iMeta);
         confirmInv.setItem(12, iStack);
 
         //NO
         iStack = new ItemStack(Material.WOOL, 1, (short) 14);
         iMeta.setDisplayName(ChatColor.RED + "NO");
+        if(pointName.equals("Start") || pointName.equals("Finish")){
+            iMeta.setLore(Arrays.asList(ChatColor.RED + "Are you sure you want to delete this point?", ChatColor.RED + "WARNING! This action can NOT be undone!", ChatColor.GOLD + "PointName:", pointName, ChatColor.GOLD + "World:", worldName, ChatColor.RED + "This will NOT reset player records!"));
+        }else{
+            iMeta.setLore(Arrays.asList(ChatColor.RED + "Are you sure you want to delete this point?", ChatColor.RED + "WARNING! This action can NOT be undone!", ChatColor.GOLD + "PointName:", pointName, ChatColor.GOLD + "World:", worldName));
+        }
         iStack.setItemMeta(iMeta);
         confirmInv.setItem(14, iStack);
 
