@@ -1,6 +1,7 @@
 /*TODO LIST
 
 Edit buttons on edit inv ??
+When a stop/start point is removed, reset player scores for that world.
 
 * */
 
@@ -28,6 +29,7 @@ public class Main extends JavaPlugin {
 
         //Register events
         new InvClickEvent(this);
+        new PBlockBreakEvent(this);
         new PChangeWorldEvent(this);
         new PInteractEvent(this);
         new PJoinEvent(this);
