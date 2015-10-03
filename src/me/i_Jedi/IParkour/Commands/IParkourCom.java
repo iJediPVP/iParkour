@@ -1,8 +1,9 @@
 package me.i_Jedi.IParkour.Commands;
 
-import me.i_Jedi.IParkour.Inventories.InventoryHandler;
+import me.i_Jedi.IParkour.Inventories.WorldInventory;
 import me.i_Jedi.IParkour.Parkour.PlayerInfo;
 import me.i_Jedi.IParkour.Parkour.Point;
+import me.i_Jedi.MenuAPI.MenuManager;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -60,7 +61,13 @@ public class IParkourCom implements CommandExecutor {
                             if(player.hasPermission("iParkour.iparkour.edit")){
                                 //Check player's gamemode
                                 if(player.getGameMode().equals(GameMode.CREATIVE)){
-                                    player.openInventory(new InventoryHandler(plugin).getWorldInventory().getInventory());
+                                    try{
+                                        new WorldInventory(plugin);
+                                        MenuManager mm = new MenuManager();
+                                        mm.openMenuByName("World List", player);
+                                    }catch(NullPointerException npe){
+                                        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "There are not any points registered on this server.");
+                                    }
                                     return true;
                                 }else{
                                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "You must be in CREATIVE mode to use this command.");

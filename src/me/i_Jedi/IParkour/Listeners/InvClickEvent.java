@@ -1,7 +1,10 @@
 package me.i_Jedi.IParkour.Listeners;
 
-import me.i_Jedi.IParkour.Inventories.InventoryHandler;
+import me.i_Jedi.IParkour.Inventories.ConfirmInventory;
+import me.i_Jedi.IParkour.Inventories.EditInventory;
+import me.i_Jedi.IParkour.Inventories.WorldInventory;
 import me.i_Jedi.IParkour.Parkour.Point;
+import me.i_Jedi.MenuAPI.MenuManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -38,27 +41,34 @@ public class InvClickEvent implements Listener {
                 return;
             }
 
-            //Check which inventory
-            InventoryHandler invHandler = new InventoryHandler(plugin);
-            //Edit inventory
-            if(invHandler.getEditInventory().getName().equals(invName)){
-                //Open confirm inventory
-                List<String> itemLore = event.getCurrentItem().getItemMeta().getLore();
-                player.openInventory(invHandler.getConfirmInventory().getInventory(itemName, itemLore.get(1)));
-                event.setCancelled(true);
-
-            //World inventory
-            }else if(invHandler.getWorldInventory().getName().equals(invName)){
-                for(World w : Bukkit.getWorlds()){
-                    if(w.getName().equals(itemName)){
-                        player.openInventory(invHandler.getEditInventory().getInventory(itemName));
-                        event.setCancelled(true);
-                    }
+            //Find a matching inventory
+            ConfirmInventory cInv = new ConfirmInventory();
+            if(invName.equals("World List")){
+                //Open edit inv
+                try{
+                    new EditInventory(plugin, itemName);
+                    new MenuManager().openMenuByName("Point Editor", player);
+                    event.setCancelled(true);
+                    return;
+                }catch(NullPointerException npe){
+                    event.setCancelled(true);
+                    return;
                 }
-                event.setCancelled(true);
-                return;
-            //Confirm inventory
-            }else if(invHandler.getConfirmInventory().getName().equals(invName)){
+
+            }else if(invName.equals("Point Editor")){
+                //Open confirm inv
+                try{
+                    String worldName = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1));
+                    player.openInventory(cInv.getInventory(itemName, worldName));
+                    event.setCancelled(true);
+                    return;
+                }catch(NullPointerException npe){
+                    event.setCancelled(true);
+                    return;
+                }
+
+            }else if(invName.equals(cInv.getName())){
+                //Store pointName and worldName
                 List<String> lore = event.getInventory().getItem(12).getItemMeta().getLore();
                 String pointName = lore.get(3);
                 String worldName = lore.get(5);
@@ -69,22 +79,31 @@ public class InvClickEvent implements Listener {
                     pointInfo.removePoint();
                     player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "" + pointName + ChatColor.GOLD + " has been removed.");
 
-                    //Check if there are any points left for this world. If not take the player back to the world selection inventory
-                    if(pointInfo.anyPoints()){
-                        player.openInventory(invHandler.getEditInventory().getInventory(worldName));
-                        event.setCancelled(true);
-                        return;
-                    }else{
-                        player.openInventory(invHandler.getWorldInventory().getInventory());
-                        event.setCancelled(true);
-                        return;
+
+                }//Else do nothing special for NO and Back. They both have the same function.
+                //If there are not any more points in this world, go back to the main menu.
+                if(pointInfo.anyPoints()){
+                    new EditInventory(plugin, worldName);
+                    new MenuManager().openMenuByName("Point Editor", player);
+                    event.setCancelled(true);
+                    return;
+                }else{
+                    //See if there are any points in any of the worlds
+                    for(World world : Bukkit.getWorlds()){
+                        Point pInfo = new Point(plugin, world, "");
+                        if(pInfo.anyPoints()){
+                            new WorldInventory(plugin);
+                            new MenuManager().openMenuByName("World List", player);
+                        }
                     }
-
-                }//Else do nothing for the other options. They both take the player back to the editInventory
-                player.openInventory(invHandler.getEditInventory().getInventory(worldName));
-                event.setCancelled(true);
+                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "There are no more points registered on the server.");
+                    player.closeInventory();
+                    event.setCancelled(true);
+                    return;
+                }
             }
-
         }
     }
+
+
 }
