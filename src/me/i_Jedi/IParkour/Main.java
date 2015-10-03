@@ -1,6 +1,4 @@
 /*TODO LIST
-Change how checkpoints are set up. Manually set their number so that they are always in order.
-Edit buttons on edit inv ?? - menu api stuff to do later
 
 * */
 
