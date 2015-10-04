@@ -1,5 +1,5 @@
 /*TODO LIST
-Add worldName to record reset message.
+
 * */
 
 package me.i_Jedi.IParkour;
@@ -10,15 +10,8 @@ import me.i_Jedi.IParkour.Listeners.*;
 import me.i_Jedi.IParkour.Parkour.PlayerInfo;
 import me.i_Jedi.MenuAPI.MenuButtonListener;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.io.IOException;
 
 public class Main extends JavaPlugin {
 
@@ -62,26 +55,4 @@ public class Main extends JavaPlugin {
         getLogger().info("iParkour has been disable!");
     }
 
-    //Test command to be removed later.
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Player player = (Player) sender;
-        String command = cmd.getName().toUpperCase();
-        if(command.equals("TEST")){
-            if(!player.isOp()){
-                return true;
-            }
-            int count = Integer.parseInt(args[0]);
-            File file = new File(this.getDataFolder() + "/worldData/" + player.getWorld().getName() + ".yml");
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            for(int x = 1; x <= count; x++){
-                config.set("Checkpoint " + x + ".exists", true);
-            }
-            try{
-                config.save(file);
-            }catch(IOException ioe){}
-        }
-
-        return true;
-    }
 }

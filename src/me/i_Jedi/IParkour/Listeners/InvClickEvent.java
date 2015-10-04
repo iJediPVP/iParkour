@@ -152,13 +152,13 @@ public class InvClickEvent implements Listener {
                     pList.add(player);
                     for(Player p : pList){
                         if(!p.equals(player)){
-
+                            p.closeInventory();
+                            p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + player.getPlayerListName() + ChatColor.RED + " has removed the last point on the server.");
                         }
-                        p.closeInventory();
-                        p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + player.getPlayerListName() + ChatColor.RED + " has removed the last point on the server.");
+
                     }
-                    //player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "There are no more points registered on the server.");
-                    //player.closeInventory();
+                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "There are no more points registered on the server.");
+                    player.closeInventory();
                     event.setCancelled(true);
                     return;
                 }
