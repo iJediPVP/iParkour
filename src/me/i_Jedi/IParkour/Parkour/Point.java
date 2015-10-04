@@ -1,5 +1,7 @@
 package me.i_Jedi.IParkour.Parkour;
 
+import me.i_Jedi.IParkour.Inventories.EditInventory;
+import me.i_Jedi.IParkour.Inventories.WorldInventory;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -82,6 +84,10 @@ public class Point {
             setLocation(block.getLocation());
             setExists(true);
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + path + ChatColor.GOLD + " has been set.");
+
+            //Update editInv & worldInv in case someone is viewing it
+            new EditInventory(plugin, world.getName());
+            new WorldInventory(plugin);
         }else{
             //Set to air and tell player that this point already exists
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED +
@@ -104,6 +110,10 @@ public class Point {
             setLocation(block.getLocation());
             setExists(true);
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + path + ChatColor.GOLD + " has been set.");
+
+            //Update editInv & worldInv in case someone is viewing it
+            new EditInventory(plugin, world.getName());
+            new WorldInventory(plugin);
         }else{
             //Set to air and tell player that this point already exists
             player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED +
@@ -132,6 +142,10 @@ public class Point {
         }
         config.set(path, null);
         setExists(false);
+
+        //Update editInv & worldInv in case someone is viewing it
+        new EditInventory(plugin, world.getName());
+        new WorldInventory(plugin);
     }
 
     //Check for any points in this world

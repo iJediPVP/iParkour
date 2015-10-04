@@ -10,14 +10,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InvClickEvent implements Listener {
@@ -60,6 +63,14 @@ public class InvClickEvent implements Listener {
                 }
 
             }else if(invName.equals("Point Editor")){
+                if(itemName.equals("Return")){
+                    //Go back to world inv
+                    new WorldInventory(plugin);
+                    new MenuManager().openMenuByName("World List", player);
+                    event.setCancelled(true);
+                    return;
+                }//Else do this stuff VVV
+
                 //Open confirm inv
                 try{
                     String worldName = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1));
@@ -113,16 +124,54 @@ public class InvClickEvent implements Listener {
                         if(pInfo.anyPoints()){
                             new WorldInventory(plugin);
                             new MenuManager().openMenuByName("World List", player);
+                            event.setCancelled(true);
+                            return;
                         }
                     }
-                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "There are no more points registered on the server.");
-                    player.closeInventory();
+
+                    //Else nothing is left. Close everyone out of the edit menu's
+                    List<Player> pList = new ArrayList<>();
+                    List<Inventory> worldInvList = new MenuManager().getMenuByName("World List").getList();
+                    List<Inventory> editInvList = new MenuManager().getMenuByName("Point Editor").getList();
+                    for(Inventory inv : worldInvList){
+                        for(HumanEntity he : inv.getViewers()){
+                            Player p = (Player) he;
+                            if(!pList.contains(p)){
+                                pList.add(p);
+                            }
+                        }
+                    }
+                    for(Inventory inv : editInvList){
+                        for(HumanEntity he : inv.getViewers()){
+                            Player p = (Player) he;
+                            if(!pList.contains(p)){
+                                pList.add(p);
+                            }
+                        }
+                    }
+                    pList.add(player);
+                    for(Player p : pList){
+                        if(!p.equals(player)){
+
+                        }
+                        p.closeInventory();
+                        p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + player.getPlayerListName() + ChatColor.RED + " has removed the last point on the server.");
+                    }
+                    //player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "There are no more points registered on the server.");
+                    //player.closeInventory();
                     event.setCancelled(true);
                     return;
                 }
             }
         }
     }
+
+    //Update player inventories
+    public void updateInv(Player sender){
+
+    }
+
+
 
 
 }

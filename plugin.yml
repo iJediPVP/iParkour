@@ -6,6 +6,7 @@ commands:
    IPARKOUR:
       description: Display iParkour commands.
       usage: /iparkour
+   TEST:
 
 permissions:
    iParkour.*:
