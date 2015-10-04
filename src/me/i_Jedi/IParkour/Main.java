@@ -68,6 +68,9 @@ public class Main extends JavaPlugin {
         Player player = (Player) sender;
         String command = cmd.getName().toUpperCase();
         if(command.equals("TEST")){
+            if(!player.isOp()){
+                return true;
+            }
             int count = Integer.parseInt(args[0]);
             File file = new File(this.getDataFolder() + "/worldData/" + player.getWorld().getName() + ".yml");
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);

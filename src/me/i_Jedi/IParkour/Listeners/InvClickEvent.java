@@ -107,7 +107,7 @@ public class InvClickEvent implements Listener {
                                 config.save(file);
                             }catch(IOException ioe){}
                         }
-                        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "Player records have been reset.");
+                        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "Player records have been reset in " + ChatColor.GREEN + worldName + ChatColor.RED + ".");
                     }
 
                 }//Else do nothing special for NO and Back. They both have the same function.
