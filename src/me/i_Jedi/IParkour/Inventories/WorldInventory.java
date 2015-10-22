@@ -1,15 +1,13 @@
 package me.i_Jedi.IParkour.Inventories;
 
 import me.i_Jedi.IParkour.Parkour.Point;
-import me.i_Jedi.MenuAPI.Menu;
+import me.ijedi.menulibrary.Menu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -83,9 +81,26 @@ public class WorldInventory {
 
         //Create world menu
         ItemStack[] worldItemArray = worldItems.toArray(new ItemStack[worldItems.size()]);
-        Menu menu = new Menu(plugin, new ItemStack(Material.BARRIER), new ItemStack(Material.ARROW), new ItemStack(Material.ARROW), worldItemArray, "World List");
+        Menu menu = new Menu("World List");
+        menu.setContents(worldItemArray);
 
+        //Set buttons
+        //Set buttons
+        ItemStack exitButton = new ItemStack(Material.ARROW);
+        ItemMeta exitMeta = exitButton.getItemMeta();
+        exitMeta.setDisplayName(ChatColor.RED + "Exit");
+        exitButton.setItemMeta(exitMeta);
+
+        ItemStack backButton = new ItemStack(Material.ARROW);
+        ItemMeta backMeta = backButton.getItemMeta();
+        backMeta.setDisplayName(ChatColor.RED + "Back");
+        backButton.setItemMeta(backMeta);
+
+        ItemStack nextButton = new ItemStack(Material.ARROW);
+        ItemMeta nextMeta = nextButton.getItemMeta();
+        nextMeta.setDisplayName(ChatColor.GREEN + "Next");
+        nextButton.setItemMeta(nextMeta);
+
+        menu.setButtons(exitButton, backButton, nextButton);
     }
-
-
 }

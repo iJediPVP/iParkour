@@ -4,7 +4,7 @@ import me.i_Jedi.IParkour.Inventories.ConfirmInventory;
 import me.i_Jedi.IParkour.Inventories.EditInventory;
 import me.i_Jedi.IParkour.Inventories.WorldInventory;
 import me.i_Jedi.IParkour.Parkour.Point;
-import me.i_Jedi.MenuAPI.MenuManager;
+import me.ijedi.menulibrary.MenuManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -54,7 +54,7 @@ public class InvClickEvent implements Listener {
                 //Open edit inv
                 try{
                     new EditInventory(plugin, itemName);
-                    new MenuManager().openMenuByName("Point Editor", player);
+                    player.openInventory(new MenuManager().getMenu("Point Editor"));
                     event.setCancelled(true);
                     return;
                 }catch(NullPointerException npe){
@@ -66,7 +66,7 @@ public class InvClickEvent implements Listener {
                 if(itemName.equals("Return")){
                     //Go back to world inv
                     new WorldInventory(plugin);
-                    new MenuManager().openMenuByName("World List", player);
+                    player.openInventory(new MenuManager().getMenu("World List"));
                     event.setCancelled(true);
                     return;
                 }//Else do this stuff VVV
@@ -90,10 +90,12 @@ public class InvClickEvent implements Listener {
                 Point pointInfo = new Point(plugin, Bukkit.getWorld(worldName), pointName);
                 //See which option was clicked
                 if(itemName.equals("YES")){
+                    try{
+                        //Remove the point
+                        pointInfo.removePoint();
+                        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "" + pointName + ChatColor.GOLD + " has been removed.");
+                    }catch(NullPointerException npe){}
 
-                    //Remove the point
-                    pointInfo.removePoint();
-                    player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "" + pointName + ChatColor.GOLD + " has been removed.");
 
                     //If start or finish point, reset player records
                     if(pointName.equals("Start") || pointName.equals("Finish")){
@@ -114,7 +116,7 @@ public class InvClickEvent implements Listener {
                 //If there are not any more points in this world, go back to the main menu.
                 if(pointInfo.anyPoints()){
                     new EditInventory(plugin, worldName);
-                    new MenuManager().openMenuByName("Point Editor", player);
+                    player.openInventory(new MenuManager().getMenu("Point Editor"));
                     event.setCancelled(true);
                     return;
                 }else{
@@ -123,7 +125,7 @@ public class InvClickEvent implements Listener {
                         Point pInfo = new Point(plugin, world, "");
                         if(pInfo.anyPoints()){
                             new WorldInventory(plugin);
-                            new MenuManager().openMenuByName("World List", player);
+                            player.openInventory(new MenuManager().getMenu("World List"));
                             event.setCancelled(true);
                             return;
                         }
@@ -131,8 +133,8 @@ public class InvClickEvent implements Listener {
 
                     //Else nothing is left. Close everyone out of the edit menu's
                     List<Player> pList = new ArrayList<>();
-                    List<Inventory> worldInvList = new MenuManager().getMenuByName("World List").getList();
-                    List<Inventory> editInvList = new MenuManager().getMenuByName("Point Editor").getList();
+                    List<Inventory> worldInvList = new MenuManager().getMenuPageList("World List");
+                    List<Inventory> editInvList = new MenuManager().getMenuPageList("Point Editor");
                     for(Inventory inv : worldInvList){
                         for(HumanEntity he : inv.getViewers()){
                             Player p = (Player) he;
@@ -165,13 +167,4 @@ public class InvClickEvent implements Listener {
             }
         }
     }
-
-    //Update player inventories
-    public void updateInv(Player sender){
-
-    }
-
-
-
-
 }

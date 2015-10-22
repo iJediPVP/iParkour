@@ -1,8 +1,7 @@
 package me.i_Jedi.IParkour.Inventories;
 
 import me.i_Jedi.IParkour.Parkour.Point;
-import me.i_Jedi.MenuAPI.Menu;
-import me.i_Jedi.MenuAPI.MenuManager;
+import me.ijedi.menulibrary.Menu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -110,26 +109,43 @@ public class EditInventory {
             }
         }catch(NullPointerException npe){}
 
-        //Convert to array
+        //Convert to array & set contents
         ItemStack[] itemArray = sortedItems.toArray(new ItemStack[sortedItems.size()]);
-        new Menu(plugin, new ItemStack(Material.ARROW), new ItemStack(Material.ARROW), new ItemStack(Material.ARROW), itemArray, "Point Editor");
+        Menu menu = new Menu("Point Editor");
+        menu.setContents(itemArray);
 
-        //Add custom return button if needed. MenuAPI would just use an "Exit" button.
+        //Set buttons
+        ItemStack exitButton = new ItemStack(Material.ARROW);
+        ItemMeta exitMeta = exitButton.getItemMeta();
+        exitMeta.setDisplayName(ChatColor.RED + "Exit");
+        exitButton.setItemMeta(exitMeta);
+
+        ItemStack backButton = new ItemStack(Material.ARROW);
+        ItemMeta backMeta = backButton.getItemMeta();
+        backMeta.setDisplayName(ChatColor.RED + "Back");
+        backButton.setItemMeta(backMeta);
+
+        ItemStack nextButton = new ItemStack(Material.ARROW);
+        ItemMeta nextMeta = nextButton.getItemMeta();
+        nextMeta.setDisplayName(ChatColor.GREEN + "Next");
+        nextButton.setItemMeta(nextMeta);
+
+        menu.setButtons(exitButton, backButton, nextButton);
+
+        //Override "Exit" button. MenuLibrary would close the Menu but we need to return to WorldInventory
         ItemStack iStack = new ItemStack(Material.ARROW);
         ItemMeta iMeta = iStack.getItemMeta();
         iMeta.setDisplayName(ChatColor.GOLD + "Return");
         iMeta.setLore(Arrays.asList(ChatColor.GREEN + "Return to the World List"));
         iStack.setItemMeta(iMeta);
-        MenuManager mm = new MenuManager();
-        Menu menu = mm.getMenuByName("Point Editor");
-        int invSize = menu.getList().get(0).getSize();
-        ItemStack testItem = menu.getList().get(0).getItem(invSize - 5);
+
+        int slot = menu.getFirstPage().getSize() - 5;
         try{
-            String testName = testItem.getItemMeta().getDisplayName();
+            String testName = menu.getFirstPage().getItem(slot).getItemMeta().getDisplayName();
             if(!testName.isEmpty()){
-                menu.getList().get(0).setItem(invSize - 5, iStack);
+                menu.getFirstPage().setItem(slot, iStack);
             }
-        }catch(NullPointerException npe){} //Do nothing with this.
+        }catch(NullPointerException npe){} //Do nothing.
 
     }
 }

@@ -3,7 +3,7 @@ package me.i_Jedi.IParkour.Commands;
 import me.i_Jedi.IParkour.Inventories.WorldInventory;
 import me.i_Jedi.IParkour.Parkour.PlayerInfo;
 import me.i_Jedi.IParkour.Parkour.Point;
-import me.i_Jedi.MenuAPI.MenuManager;
+import me.ijedi.menulibrary.MenuManager;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -64,7 +64,7 @@ public class IParkourCom implements CommandExecutor {
                                     try{
                                         new WorldInventory(plugin);
                                         MenuManager mm = new MenuManager();
-                                        mm.openMenuByName("World List", player);
+                                        player.openInventory(mm.getMenu("World List"));
                                     }catch(NullPointerException npe){
                                         player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "[iParkour] " + ChatColor.RED + "There are not any points registered on this server.");
                                     }
