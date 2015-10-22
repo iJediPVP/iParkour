@@ -57,7 +57,8 @@ public class InvClickEvent implements Listener {
                     player.openInventory(new MenuManager().getMenu("Point Editor"));
                     event.setCancelled(true);
                     return;
-                }catch(NullPointerException npe){
+                }catch(NullPointerException npe){ //Empty menu for this world. Reopen world list
+                    player.openInventory(new MenuManager().getMenu("World List"));
                     event.setCancelled(true);
                     return;
                 }
@@ -65,8 +66,13 @@ public class InvClickEvent implements Listener {
             }else if(invName.equals("Point Editor")){
                 if(itemName.equals("Return")){
                     //Go back to world inv
-                    new WorldInventory(plugin);
-                    player.openInventory(new MenuManager().getMenu("World List"));
+                    try{
+                        new WorldInventory(plugin);
+                        player.openInventory(new MenuManager().getMenu("World List"));
+                    }catch(NullPointerException npe){ //Empty inv
+                        player.closeInventory();
+                    }
+
                     event.setCancelled(true);
                     return;
                 }//Else do this stuff VVV
